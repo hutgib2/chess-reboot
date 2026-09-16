@@ -22,7 +22,7 @@ class Animator():
     
     def dragon_attack(self, attack_squares):
         for square in attack_squares:
-            Animation(square.rect.center, FLAME_FRAMES, self.animation_sprites)
+            Animation(square.rect.center, , self.animation_sprites)
 
     def catapult_attack(self, attacker_square, attacked_square, all_pieces):
         attack_direction = get_direction_between(attacker_square.coord, attacked_square.coord)
