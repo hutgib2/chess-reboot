@@ -20,7 +20,7 @@ PIECE_SURFS = {
     "black": load_images_named("assets", "images", "black_pieces"),
 }
 
-FLAME_FRAMES = load_images("assets", "animations", "flame")
+FLAME_FRAMES = load_images("assets", "animations", "flame", scale=0.25)
 SMOKE_FRAMES = load_images("assets", "animations", "smoke")
 SPLAT_FRAMES = load_images("assets", "animations", "splat")
 BOARD_SURFS = load_images_named("assets", "images", "board")
