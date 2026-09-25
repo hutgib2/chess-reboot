@@ -67,13 +67,13 @@ class Catapult(Piece):
 class Boulder(pygame.sprite.Sprite):
     def __init__(self, pos, direction, all_pieces, attacker, groups):
         super().__init__(groups)
-        self.original_surf = pygame.transform.smoothscale(BOARD_SURFS['boulder'], (TILE_WIDTH-50, TILE_WIDTH-50)) 
+        self.original_surf = BOARD_SURFS['boulder']
         self.image = self.original_surf
         self.rect = self.image.get_frect(center = pos) 
         self.spawn_time = pygame.time.get_ticks()
         self.lifetime = 1000
         self.direction = direction
-        self.speed = 1400
+        self.speed = BOARD_SIZE 
         self.all_pieces = all_pieces
         self.killed_first = False
         self.rotation_speed = 256

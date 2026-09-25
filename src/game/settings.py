@@ -21,9 +21,10 @@ PIECE_SURFS = {
 }
 
 FLAME_FRAMES = load_images("assets", "animations", "flame", scale=0.25)
-SMOKE_FRAMES = load_images("assets", "animations", "smoke")
-SPLAT_FRAMES = load_images("assets", "animations", "splat")
+SMOKE_FRAMES = load_images("assets", "animations", "smoke", scale=0.2)
+SPLAT_FRAMES = load_images("assets", "animations", "splat", scale=0.2)
 BOARD_SURFS = load_images_named("assets", "images", "board")
+BOARD_SURFS['boulder'] = pygame.transform.smoothscale(BOARD_SURFS['boulder'], (TILE_WIDTH * 0.75, TILE_WIDTH * 0.75))
 
 PIECE_SCORES = {
     "legionary": 1,
