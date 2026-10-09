@@ -43,7 +43,8 @@ class Animation(pygame.sprite.Sprite):
         super().__init__(groups)
         self.frames = frames
         self.image = self.frames[0]
-        self.rect = self.image.get_frect(center = pos)
+        self.pos = pos
+        self.rect = self.image.get_frect(center = self.pos)
         self.spawn_time = pygame.time.get_ticks()
         self.lifetime = 1000
         self.frame_index = 0
@@ -52,6 +53,7 @@ class Animation(pygame.sprite.Sprite):
     def animate(self, dt):
         self.frame_index += self.animation_speed * dt
         self.image = self.frames[int(self.frame_index) % len(self.frames)]
+        self.rect = self.image.get_frect(center = self.pos)
         pygame.display.get_surface().blit(self.image, self.rect)
     
     def update(self, dt, _):
