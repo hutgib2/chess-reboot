@@ -42,12 +42,12 @@ class ChessBoard(pygame.sprite.Sprite):
         # images
         self.select_indicator = pygame.transform.smoothscale(BOARD_SURFS['select_indicator'], (TILE_WIDTH, TILE_WIDTH))
         self.move_indicator = pygame.transform.smoothscale(BOARD_SURFS['move_indicator'], (TILE_WIDTH, TILE_WIDTH))
-        self.attack_indicator = pygame.transform.smoothscale(BOARD_SURFS['attack_indicator'], (TILE_WIDTH, TILE_WIDTH))
+        self.attack_indicator = pygame.transform.smoothscale(BOARD_SURFS['attack_indicator'], (TILE_WIDTH * 0.8, TILE_WIDTH * 0.8))
         self.stun_indicator = pygame.transform.smoothscale(BOARD_SURFS['stun_indicator'], (TILE_WIDTH / 1.2, TILE_WIDTH / 1.2))
-        self.switch_indicator = pygame.transform.smoothscale(BOARD_SURFS['switch_indicator'], (TILE_WIDTH, TILE_WIDTH))
+        self.switch_indicator = pygame.transform.smoothscale(BOARD_SURFS['switch_indicator'], (TILE_WIDTH / 1.25, TILE_WIDTH / 1.25))
         self.reload_indicator = pygame.transform.smoothscale(BOARD_SURFS['reload_indicator'], (TILE_WIDTH / 2, TILE_WIDTH / 2))
         self.move_indicator.set_alpha(200)
-        self.attack_indicator.set_alpha(200)
+        self.attack_indicator.set_alpha(150)
         self.stun_indicator.set_alpha(240)
         self.switch_indicator.set_alpha(200)
 
@@ -296,25 +296,27 @@ class ChessBoard(pygame.sprite.Sprite):
 
 
     def render(self):
-        pygame.display.get_surface().blit(self.image, self.rect) # draws chessboard
+        screen.blit(self.image, self.rect) # draws chessboard
         self.promotion_sprites.update()
         for row in range(8):
             for col in range(8):
                 square = self.squares[row][col]
                 if square.is_possible_move == True:
-                    pygame.display.get_surface().blit(self.move_indicator, square.rect)
+                    screen.blit(self.move_indicator, square.rect)
                 if square.is_selected == True:
-                    pygame.display.get_surface().blit(self.select_indicator, square.rect)
+                    screen.blit(self.select_indicator, square.rect)
                 if square.piece != None:
-                    pygame.display.get_surface().blit(square.piece.image, square.rect)
+                    screen.blit(square.piece.image, square.rect)
                 if square.piece and square.piece.is_stunned == True:
-                    pygame.display.get_surface().blit(self.stun_indicator, square.rect)
+                    screen.blit(self.stun_indicator, square.rect)
                 if square.is_attack_move == True:
-                    pygame.display.get_surface().blit(self.attack_indicator, square.rect)
+                    rect = self.attack_indicator.get_frect(center=square.rect.center)
+                    screen.blit(self.attack_indicator, rect)
                 if square.is_swappable == True:
-                    pygame.display.get_surface().blit(self.switch_indicator, square.rect)
+                    rect = self.switch_indicator.get_frect(center=square.rect.center)
+                    screen.blit(self.switch_indicator, rect)
                 if square.piece and square.piece.is_reloading == True:
-                    pygame.display.get_surface().blit(self.reload_indicator, square.rect)
+                    screen.blit(self.reload_indicator, square.rect)
 
     def get_piece_count(self):
         count = 0

@@ -32,7 +32,7 @@ class Animator():
     def archer_attack(self, attacker_square, attacked_square):
         attack_direction = get_direction_between(attacker_square.coord, attacked_square.coord)
         direction = pygame.Vector2(attack_direction[1], attack_direction[0])
-        Animation(attacked_square.rect.center, SPLAT_FRAMES, self.animation_sprites)
+        # Animation(attacked_square.rect.center, SPLAT_FRAMES, self.animation_sprites)
         Arrow(attacked_square, direction, self.animation_sprites)
 
     def update(self, dt, round_num):
