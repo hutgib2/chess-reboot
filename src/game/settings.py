@@ -20,9 +20,8 @@ PIECE_SURFS = {
     "black": load_images_named("assets", "images", "black_pieces"),
 }
 
-FLAME_FRAMES = load_images("assets", "animations", "flame", scale=0.25)
+FLAME_FRAMES = load_images("assets", "animations", "flame", scale=3)
 SMOKE_FRAMES = load_images("assets", "animations", "smoke", scale=0.4)
-# SPLAT_FRAMES = load_images("assets", "animations", "splat", scale=0.2)
 BOARD_SURFS = load_images_named("assets", "images", "board")
 BOARD_SURFS['boulder'] = pygame.transform.smoothscale(BOARD_SURFS['boulder'], (TILE_WIDTH * 0.75, TILE_WIDTH * 0.75))
 
