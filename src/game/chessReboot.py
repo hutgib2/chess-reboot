@@ -34,18 +34,18 @@ class ChessReboot():
         self.running = True
         self.clock = pygame.time.Clock()
         self.switch_turn_timer = Timer(1000, self.switch_turn)
-        self.rulebook_surf = pygame.image.load(join('assets', 'images', 'rules', 'rulebook.png'))
-        self.rulebook = InteractiveButton(self.rulebook_surf, (WINDOW_WIDTH-TILE_WIDTH, TILE_WIDTH), (TILE_WIDTH, TILE_WIDTH), (), self.show_rules)
+        # self.rulebook_surf = pygame.image.load(join('assets', 'images', 'rules', 'rulebook.png'))
+        # self.rulebook = InteractiveButton(self.rulebook_surf, (WINDOW_WIDTH-TILE_WIDTH, TILE_WIDTH), (TILE_WIDTH, TILE_WIDTH), (), self.show_rules)
         # rules screen aspect ratio = 2000 / 1125
-        self.rules_screen = pygame.transform.smoothscale(pygame.image.load(join('assets', 'images', 'rules', 'rules_screen.png')), ((2000 / 1125)*(2*WINDOW_HEIGHT / 3), 2*WINDOW_HEIGHT / 3))
-        self.rules_rect = self.rules_screen.get_frect(center=(WINDOW_WIDTH/2, WINDOW_HEIGHT/2))
-        self.rules_shown = False
+        # self.rules_screen = pygame.transform.smoothscale(pygame.image.load(join('assets', 'images', 'rules', 'rules_screen.png')), ((2000 / 1125)*(2*WINDOW_HEIGHT / 3), 2*WINDOW_HEIGHT / 3))
+        # self.rules_rect = self.rules_screen.get_frect(center=(WINDOW_WIDTH/2, WINDOW_HEIGHT/2))
+        # self.rules_shown = False
 
     def reset_game(self):
         self.create_new_game()
         notifier.notify('New Game!')
-        self.players['white'].set_score(0)
-        self.players['black'].set_score(0)
+        # self.players['white'].set_score(0)
+        # self.players['black'].set_score(0)
 
     def save_game(self):
         pass
@@ -57,8 +57,8 @@ class ChessReboot():
         #         os.remove(f"C:\\Users\\Hugo\\pygame\\Hugo's Chess\\assets\\saved_games\\{file_names[0]}")
         #         return
         
-    def show_rules(self):
-        self.rules_shown = not self.rules_shown
+    # def show_rules(self):
+    #     self.rules_shown = not self.rules_shown
 
     def switch_turn(self):
         self.board.game_blocked = False
@@ -76,15 +76,15 @@ class ChessReboot():
                 self.board.update()
                 continue
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                if self.rulebook.rect.collidepoint(event.pos):
-                    self.rulebook.is_clicked()
-                    continue
+                # if self.rulebook.rect.collidepoint(event.pos):
+                #     self.rulebook.is_clicked()
+                    # continue
                 # loop over boards promotion sprites and check if clicked, call is_clicked()
                 for sprite in self.board.promotion_sprites:
                     if sprite.rect.collidepoint(event.pos):
                         sprite.is_clicked()
                         self.save_game()
-                if self.rules_shown or self.board.game_blocked or self.board.game_over:
+                if self.board.game_blocked or self.board.game_over:
                     continue
                 if not self.board.rect.collidepoint(event.pos) and self.board.selected_square:
                     self.board.deselect_piece()
@@ -119,9 +119,9 @@ class ChessReboot():
                             
                             # Get list of killed pieces and assign to graveyard positions + update score here instead
                             killed_pieces = self.board.attack_piece(self.board.selected_square, click_square)
-                            for piece in killed_pieces:
-                                score = PIECE_SCORES[piece.type] # the score
-                                self.players[self.board.turn].set_score(self.players[self.board.turn].score + score)
+                            # for piece in killed_pieces:
+                                # score = PIECE_SCORES[piece.type] # the score
+                                # self.players[self.board.turn].set_score(self.players[self.board.turn].score + score)
 
                             self.board.deselect_piece()
                             if click_square.piece and click_square.piece.type == 'emperor':
@@ -144,12 +144,12 @@ class ChessReboot():
         self.board.render()
         self.notifier.update()
         self.animator.update(dt, self.board.round_num)
-        self.rulebook.update()
+        # self.rulebook.update()
         self.players['white'].update()
         self.players['black'].update()
 
-        if self.rules_shown == True:
-            pygame.display.get_surface().blit(self.rules_screen, self.rules_rect)
+        # if self.rules_shown == True:
+        #     pygame.display.get_surface().blit(self.rules_screen, self.rules_rect)
         pygame.display.update()
 
     async def run(self):

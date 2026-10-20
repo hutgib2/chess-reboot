@@ -101,10 +101,10 @@ class ChessBoard(pygame.sprite.Sprite):
             "round_num": self.round_num,
             "turn": self.turn,
             "pieces": [],
-            "scores": {
-                'white': self.players['white'].score,
-                'black': self.players['black'].score,
-            }
+            # "scores": {
+            #     'white': self.players['white'].score,
+            #     'black': self.players['black'].score,
+            # }
         }
         for row in range(8):
             for col in range(8):
@@ -116,8 +116,8 @@ class ChessBoard(pygame.sprite.Sprite):
     def apply_snapshot(self, snapshot):
         self.round_num = snapshot["round_num"]
         self.turn = snapshot["turn"]
-        self.players['white'].set_score(snapshot["scores"]['white'])
-        self.players['black'].set_score(snapshot["scores"]['black'])
+        # self.players['white'].set_score(snapshot["scores"]['white'])
+        # self.players['black'].set_score(snapshot["scores"]['black'])
         
         # clear board
         for row in range(8):
