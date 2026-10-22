@@ -140,7 +140,7 @@ class ChessReboot():
                     self.switch_turn_timer.activate()
 
     def draw_game(self, dt):
-        screen.fill((127, 127, 127))
+        screen.fill(BG_COLOR)
         self.board.render()
         self.notifier.update()
         self.animator.update(dt, self.board.round_num)

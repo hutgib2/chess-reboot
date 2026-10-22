@@ -10,7 +10,6 @@ from game.chessReboot import ChessReboot
 
 # TODO: update save game links during session, remove save game when game completed
 
-
 class Menu:
     def __init__(self):
         self.menu_surf = pygame.transform.smoothscale(
@@ -121,7 +120,9 @@ class Menu:
             await asyncio.sleep(0)
 
             self.handle_events()
-            screen.fill((127, 127, 127))
+
+            # can you make a var called bg_color and use that instead
+            screen.fill(BG_COLOR)
             screen.blit(self.menu_surf, self.menu_rect)
             if self.showing_games:
                 screen.blit(self.saved_games_surf, self.saved_games_rect)
