@@ -6,7 +6,7 @@ from utils.file_importer import load_images_named, load_images
 DIRECTIONS = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
 
 pygame.init()
-screen = pygame.display.set_mode((2560, 1280))
+screen = pygame.display.set_mode((1920, 1080))
 BG_COLOR = '#302E2B'
 WINDOW_WIDTH, WINDOW_HEIGHT = screen.get_size()
 BOARD_SIZE = WINDOW_HEIGHT - 100
