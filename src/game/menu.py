@@ -71,7 +71,8 @@ class Menu:
 
     def create_saved_game_links(self):
         self.saved_game_links.empty()
-        game_ids = self.get_saved_game_ids()
+        # game_ids = self.get_saved_game_ids()
+        game_ids = self.
         game_ids = sorted(
             game_ids,
             key=lambda x: datetime.datetime.strptime(x, "%d-%m-%Y-%H%M%S"),

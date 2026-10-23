@@ -6,6 +6,7 @@ from game.pieces.piece import *
 from game.animator import Animator
 from game.notifier import Notifier
 from utils.timer import Timer
+from utils.local_storage import LocalStorage
 from game.player import Player
 import json
 import time
@@ -34,6 +35,8 @@ class ChessReboot():
         self.running = True
         self.clock = pygame.time.Clock()
         self.switch_turn_timer = Timer(1000, self.switch_turn)
+        self.local_storage = LocalStorage()
+        
         # self.rulebook_surf = pygame.image.load(join('assets', 'images', 'rules', 'rulebook.png'))
         # self.rulebook = InteractiveButton(self.rulebook_surf, (WINDOW_WIDTH-TILE_WIDTH, TILE_WIDTH), (TILE_WIDTH, TILE_WIDTH), (), self.show_rules)
         # rules screen aspect ratio = 2000 / 1125
@@ -48,7 +51,10 @@ class ChessReboot():
         # self.players['black'].set_score(0)
 
     def save_game(self):
-        pass
+        data = self.board.take_snapshot()
+        self.local_storage['id'] = data
+        self.local_storage.save()
+
         # with open(f'assets/saved_games/{self.id}.json', 'w') as file:
         #     data = self.board.take_snapshot()
         #     json.dump(data, file)

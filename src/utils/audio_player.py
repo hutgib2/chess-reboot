@@ -36,7 +36,7 @@ class AudioPlayer:
 			# el.load()
 			self.audio = el
 		else:
-			file_path = f"/assets/audio/{self.file_name}"
+			file_path = f"assets/audio/{self.file_name}"
 			self.audio = pygame.mixer.Sound(file_path)
 		return self
 
@@ -67,7 +67,7 @@ class AudioPlayer:
 		if self.audio is None:
 			return
 
-		vol = max(0.0, min(1.0, vol))
+		vol = max(0.0, vol)
 		if WEB:
 			self.audio.volume = vol
 		else:
