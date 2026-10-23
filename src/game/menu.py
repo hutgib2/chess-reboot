@@ -25,6 +25,7 @@ class Menu:
         )
 
         self.menu_sprites = pygame.sprite.Group()
+        
         InteractiveButton(
             self.play_surf,
             (WINDOW_WIDTH / 2, 3 * WINDOW_HEIGHT / 5),
