@@ -1,23 +1,27 @@
-import json
-import datetime
 import asyncio
+import datetime
+import json
 
-from game.settings import *
 from game.button import InteractiveButton
-from game.textSprite import InteractiveText
 from game.chessReboot import ChessReboot
-
+from game.settings import *
+from game.textSprite import InteractiveText
+from utils.local_storage import LocalStorage
 
 # TODO: update save game links during session, remove save game when game completed
 
+
 class Menu:
     def __init__(self):
-        self.menu_surf = pygame.transform.smoothscale(
-            pygame.image.load(join("assets", "images", "menu", "menu.png")),
-            (BOARD_SIZE, BOARD_SIZE),
-        )
-        self.menu_rect = self.menu_surf.get_frect(
-            center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+        # self.menu_surf = pygame.transform.smoothscale(
+        #     pygame.image.load(join("assets", "images", "menu", "menu.png")),
+        #     (BOARD_SIZE, BOARD_SIZE),
+        # )
+        # self.menu_rect = self.menu_surf.get_frect(
+        #     center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+        # )
+        self.local_storage = LocalStorage(
+            path="assets/saved_games.json", key="saved_games"
         )
         self.running = True
         self.play_surf = pygame.image.load(
@@ -25,7 +29,7 @@ class Menu:
         )
 
         self.menu_sprites = pygame.sprite.Group()
-        
+
         InteractiveButton(
             self.play_surf,
             (WINDOW_WIDTH / 2, 3 * WINDOW_HEIGHT / 5),
@@ -60,24 +64,24 @@ class Menu:
             data = json.load(file)
             now = datetime.datetime.now()
             game_id = now.strftime("%d-%m-%Y-%H%M%S")
-            self.pending_game = ChessReboot(game_id, data)
+            self.pending_game = ChessReboot(game_id, data, self.local_storage)
 
-    def get_saved_game_ids(self):
-        game_ids = []
-        for folder_path, _, file_names in walk("assets/saved_games/"):
-            for file_name in file_names:
-                game_ids.append(file_name.split(".")[0])
-        return game_ids
+    # def get_saved_game_ids(self):
+    # game_ids = []
+    # for folder_path, _, file_names in walk("assets/saved_games/"):
+    #     for file_name in file_names:
+    #         game_ids.append(file_name.split(".")[0])
+    # return game_ids
 
     def create_saved_game_links(self):
         self.saved_game_links.empty()
-        # game_ids = self.get_saved_game_ids()
-        game_ids = self.
+        game_ids = self.local_storage.data.keys()
         game_ids = sorted(
             game_ids,
             key=lambda x: datetime.datetime.strptime(x, "%d-%m-%Y-%H%M%S"),
             reverse=True,
         )
+        game_ids = game_ids[:10]
         start_pos = self.saved_games_rect.topleft + pygame.Vector2(
             (self.saved_games_rect.width / 4), 0
         )
@@ -101,9 +105,12 @@ class Menu:
             link.reactivate() if self.showing_games else link.deactivate()
 
     def load_game(self, game_id):
-        with open(f"assets/saved_games/{game_id}.json", "r") as file:
-            data = json.load(file)
-            self.pending_game = ChessReboot(game_id, data)
+        game_data = self.local_storage[game_id]
+        self.pending_game = ChessReboot(game_id, game_data, self.local_storage)
+
+        # with open(f"assets/saved_games/{game_id}.json", "r") as file:
+        #     data = json.load(file)
+        #     self.pending_game = ChessReboot(game_id, data)
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -125,7 +132,7 @@ class Menu:
 
             # can you make a var called bg_color and use that instead
             screen.fill(BG_COLOR)
-            screen.blit(self.menu_surf, self.menu_rect)
+            # screen.blit(self.menu_surf, self.menu_rect)
             if self.showing_games:
                 screen.blit(self.saved_games_surf, self.saved_games_rect)
                 self.saved_game_links.update()
