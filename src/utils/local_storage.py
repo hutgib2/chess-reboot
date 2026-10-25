@@ -17,8 +17,8 @@ class LocalStorage:
     """
 
     def __init__(self, path, key, default=None):
-        self.key = key      # localStorage key on web
         self.file = path    # file name on desktop
+        self.key = key      # localStorage key on web
         self.default = default or {}
         self.data = self.load()
 
