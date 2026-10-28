@@ -8,7 +8,7 @@ from game.settings import *
 from game.textSprite import InteractiveText
 from utils.local_storage import LocalStorage
 
-# Task: replace load game menu with Rect
+# Task: replace load game menu with a Rect
 # - look at how we built a custom rect menu in meteor blaster
 # - do something very similar for the load games
 # - delete the load games menu image
