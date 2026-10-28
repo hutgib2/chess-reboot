@@ -5,13 +5,8 @@ import json
 from game.button import InteractiveButton
 from game.chessReboot import ChessReboot
 from game.settings import *
-from game.textSprite import InteractiveText
+from game.textSprite import InteractiveText, TextSprite
 from utils.local_storage import LocalStorage
-
-# Task: replace load game menu with a Rect
-# - look at how we built a custom rect menu in meteor blaster
-# - do something very similar for the load games
-# - delete the load games menu image
 
 class Menu:
     def __init__(self):
@@ -19,17 +14,11 @@ class Menu:
             pygame.image.load(join("assets", "images", "menu", "menu.png")),
             (WINDOW_WIDTH, WINDOW_WIDTH)
         )
-        self.menu_rect = self.menu_surf.get_frect(
-            center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 3)
-        )
+        self.menu_rect = self.menu_surf.get_frect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 3.6))
         
-        self.local_storage = LocalStorage(
-            path="assets/saved_games.json", key="saved_games"
-        )
+        self.local_storage = LocalStorage(path="assets/saved_games.json", key="saved_games")
+        self.play_surf = pygame.image.load(join("assets", "images", "menu", "play_button.png"))
         self.running = True
-        self.play_surf = pygame.image.load(
-            join("assets", "images", "menu", "play_button.png")
-        )
 
         self.menu_sprites = pygame.sprite.Group()
 
@@ -51,13 +40,15 @@ class Menu:
         )
 
         self.showing_games = False
-        self.saved_games_surf = pygame.transform.smoothscale(
-            pygame.image.load(join("assets", "images", "menu", "saved_games.png")),
-            (WINDOW_WIDTH / 3, WINDOW_WIDTH / 3),
-        )
-        self.saved_games_rect = self.saved_games_surf.get_frect(topleft=(64, WINDOW_HEIGHT - 645))
-        self.saved_game_links = pygame.sprite.Group()
-        self.create_saved_game_links()
+        self.saved_games_surf = pygame.Surface((WINDOW_WIDTH / 3, WINDOW_HEIGHT / 1.8), pygame.SRCALPHA)
+        pygame.draw.rect(self.saved_games_surf, 'darkgray', self.saved_games_surf.get_rect(), border_radius=40)
+        self.saved_games_rect = self.saved_games_surf.get_frect(bottomleft=(32, WINDOW_HEIGHT-32))
+        
+        line_spacing = self.saved_games_surf.get_height() / 12
+        self.save_game_sprites = pygame.sprite.Group()
+        self.saved_games_title = TextSprite('Saved Games:', self.saved_games_rect.move(0, 0.75 * line_spacing).midtop, "#FFFFFF", line_spacing, ())
+        
+        self.create_save_game_links()
         self.pending_game = None
 
     def create_new_game(self):
@@ -67,8 +58,8 @@ class Menu:
             game_id = now.strftime("%d-%m-%Y-%H%M%S")
             self.pending_game = ChessReboot(game_id, data, self.local_storage)
 
-    def create_saved_game_links(self):
-        self.saved_game_links.empty()
+    def create_save_game_links(self):
+        self.save_game_sprites.empty()
         game_ids = self.local_storage.data.keys()
         game_ids = sorted(
             game_ids,
@@ -87,15 +78,15 @@ class Menu:
                 "white",
                 (WINDOW_WIDTH / 64),
                 lambda gid=game_id: self.load_game(gid),
-                self.saved_game_links,
+                self.save_game_sprites,
             )
             i += self.saved_games_rect.width / 20
 
     def show_saved_games(self):
-        self.create_saved_game_links()
+        self.create_save_game_links()
         self.showing_games = not self.showing_games
         # deactivate all saved game link on not show
-        for link in self.saved_game_links:
+        for link in self.save_game_sprites:
             link.reactivate() if self.showing_games else link.deactivate()
 
     def load_game(self, game_id):
@@ -114,7 +105,7 @@ class Menu:
                 for menu_sprite in self.menu_sprites:
                     if menu_sprite.rect.collidepoint(event.pos):
                         menu_sprite.is_clicked()
-                for link in self.saved_game_links:
+                for link in self.save_game_sprites:
                     if link.rect.collidepoint(event.pos):
                         link.is_clicked()
 
@@ -127,7 +118,8 @@ class Menu:
             screen.blit(self.menu_surf, self.menu_rect)
             if self.showing_games:
                 screen.blit(self.saved_games_surf, self.saved_games_rect)
-                self.saved_game_links.update()
+                self.saved_games_title.update()
+                self.save_game_sprites.update()
             self.menu_sprites.update()
             pygame.display.update()
 
@@ -135,4 +127,3 @@ class Menu:
                 self.showing_games = False
                 await self.pending_game.run()
                 self.pending_game = None
-                # print("GAME ENDED, back in menu")
