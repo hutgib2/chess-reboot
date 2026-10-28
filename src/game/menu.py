@@ -8,18 +8,21 @@ from game.settings import *
 from game.textSprite import InteractiveText
 from utils.local_storage import LocalStorage
 
-# TODO: update save game links during session, remove save game when game completed
-
+# Task: replace load game menu with Rect
+# - look at how we built a custom rect menu in meteor blaster
+# - do something very similar for the load games
+# - delete the load games menu image
 
 class Menu:
     def __init__(self):
-        # self.menu_surf = pygame.transform.smoothscale(
-        #     pygame.image.load(join("assets", "images", "menu", "menu.png")),
-        #     (BOARD_SIZE, BOARD_SIZE),
-        # )
-        # self.menu_rect = self.menu_surf.get_frect(
-        #     center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
-        # )
+        self.menu_surf = pygame.transform.smoothscale(
+            pygame.image.load(join("assets", "images", "menu", "menu.png")),
+            (WINDOW_WIDTH, WINDOW_WIDTH)
+        )
+        self.menu_rect = self.menu_surf.get_frect(
+            center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 3)
+        )
+        
         self.local_storage = LocalStorage(
             path="assets/saved_games.json", key="saved_games"
         )
@@ -33,7 +36,7 @@ class Menu:
         InteractiveButton(
             self.play_surf,
             (WINDOW_WIDTH / 2, 3 * WINDOW_HEIGHT / 5),
-            (WINDOW_HEIGHT / 5, WINDOW_HEIGHT / 11),
+            (WINDOW_HEIGHT / 4, WINDOW_HEIGHT / 9),
             self.menu_sprites,
             self.create_new_game,
             "New Game",
@@ -41,7 +44,7 @@ class Menu:
         InteractiveButton(
             self.play_surf,
             (WINDOW_WIDTH / 2, 3 * WINDOW_HEIGHT / 4),
-            (WINDOW_HEIGHT / 5, WINDOW_HEIGHT / 11),
+            (WINDOW_HEIGHT / 4, WINDOW_HEIGHT / 9),
             self.menu_sprites,
             self.show_saved_games,
             "Load Game",
@@ -52,12 +55,10 @@ class Menu:
             pygame.image.load(join("assets", "images", "menu", "saved_games.png")),
             (WINDOW_WIDTH / 3, WINDOW_WIDTH / 3),
         )
-        self.saved_games_rect = self.saved_games_surf.get_frect(topleft=(64, 64))
+        self.saved_games_rect = self.saved_games_surf.get_frect(topleft=(64, WINDOW_HEIGHT - 645))
         self.saved_game_links = pygame.sprite.Group()
         self.create_saved_game_links()
         self.pending_game = None
-
-        # create a load game button that loads the last saved game and runs it
 
     def create_new_game(self):
         with open("assets/new_game.json", "r") as file:
@@ -65,13 +66,6 @@ class Menu:
             now = datetime.datetime.now()
             game_id = now.strftime("%d-%m-%Y-%H%M%S")
             self.pending_game = ChessReboot(game_id, data, self.local_storage)
-
-    # def get_saved_game_ids(self):
-    # game_ids = []
-    # for folder_path, _, file_names in walk("assets/saved_games/"):
-    #     for file_name in file_names:
-    #         game_ids.append(file_name.split(".")[0])
-    # return game_ids
 
     def create_saved_game_links(self):
         self.saved_game_links.empty()
@@ -129,10 +123,8 @@ class Menu:
             await asyncio.sleep(0)
 
             self.handle_events()
-
-            # can you make a var called bg_color and use that instead
             screen.fill(BG_COLOR)
-            # screen.blit(self.menu_surf, self.menu_rect)
+            screen.blit(self.menu_surf, self.menu_rect)
             if self.showing_games:
                 screen.blit(self.saved_games_surf, self.saved_games_rect)
                 self.saved_game_links.update()
